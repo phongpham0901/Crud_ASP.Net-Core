@@ -15,6 +15,8 @@ namespace BulkyWeb.Controllers
         {
             
             List<Category> objCategoryList = _db.Categories.ToList();
+            objCategoryList = BubbleSort(objCategoryList, objCategoryList.Count);
+         
             return View(objCategoryList);
         }
 
@@ -101,5 +103,27 @@ namespace BulkyWeb.Controllers
             return RedirectToAction("Index"); 
 
         }
+
+
+        //bubble sort
+        private List<Category> BubbleSort(List<Category> obj, int n)
+        {
+            obj = _db.Categories.ToList();
+            List<Category> temp = _db.Categories.ToList();
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int j = 0; j < n - i - 1; j++)
+                {
+                    if (obj[j].DisplayOrder < obj[j + 1].DisplayOrder)
+                    {
+                        temp[0] = obj[j];
+                        obj[j] = obj[j + 1];
+                        obj[j + 1] = temp[0];
+                    }
+                }
+            }
+            return obj;
+        }
+
     }
 }

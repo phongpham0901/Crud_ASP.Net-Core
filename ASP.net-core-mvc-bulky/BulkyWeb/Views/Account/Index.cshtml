@@ -1,43 +1,48 @@
-﻿@model Account
-@{
-	Layout = null;
-}
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Slide Navbar</title>
-	<link rel="stylesheet" type="text/css" href="/css/sitelogin.css">
-	<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+﻿@model List<Account>
 
-	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-</head>
-<body>
-	<div class="main">
-		<input type="checkbox" id="chk" aria-hidden="true">
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">
+                Account List
+            </h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Account" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle-fill"></i> Create New Account
+            </a>
+        </div>
+    </div>
+</div>
 
-		<div class="signup">
-			<form>
-				<label for="chk" aria-hidden="true">Sign up</label>
-				<input type="text" name="txt" placeholder="User name" required="">
-				<input type="email" name="email" placeholder="Email" required="">
-				<input type="number" name="broj" placeholder="BrojTelefona" required="">
-				<input type="password" name="pswd" placeholder="Password" required="">
-				<button>Sign up</button>
-			</form>
-		</div>
-
-		<div class="login">
-			<form method="post" action="/Account/Login">
-				<label for="chk" aria-hidden="true">Login</label>
-				<input asp-for="Email" id="txt_email" type="email" name="email" placeholder="Email" required="">
-				<input asp-for="Password" id="txt_password" type="password" name="pswd" placeholder="Password" required="">
-				<button id="loginBtn" type="submit">Login</button>
-			</form>
-		</div>
-	</div>
-</body>
-
-
-</html>
-
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Account Email
+            </th>
+            <th>
+                Account Password
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model)
+        {
+            <tr>
+                <td>@obj.Email</td>
+                <td>@obj.Password</td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a asp-controller="Account" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-controller="Account" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
