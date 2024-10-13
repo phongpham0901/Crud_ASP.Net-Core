@@ -12,12 +12,18 @@ namespace BulkyWeb.Data
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<Account> Accounts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 }
+                );
+
+            modelBuilder.Entity<Account>().HasData(
+                new Account { Id = 1, Email = "phong@gmai.com", Password = "123456" }
                 );
         }
     }
