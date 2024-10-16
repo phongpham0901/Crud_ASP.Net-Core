@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,10 +29,12 @@
                             <a class="nav-link text-light" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Account" asp-action="Index">Account</a>
+                            <a class="nav-link text-light" asp-controller="Account" asp-action="Index" style="display:@(Context.Session.GetString("isVisible") ?? "block")">Account</a>
+
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-controller="Borrow" asp-action="Index">Form Borrow</a>
                         </li>
                     </ul>
                 </div>

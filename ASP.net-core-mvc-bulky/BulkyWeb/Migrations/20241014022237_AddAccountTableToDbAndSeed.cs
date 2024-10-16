@@ -26,7 +26,8 @@ namespace BulkyWeb.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,8 +36,8 @@ namespace BulkyWeb.Migrations
 
             migrationBuilder.InsertData(
                 table: "Accounts",
-                columns: new[] { "Id", "Email", "Password" },
-                values: new object[] { 1, "phong@gmai.com", "123456" });
+                columns: new[] { "Id", "Email", "Password", "Position" },
+                values: new object[] { 1, "phong@gmai.com", "123456", "Quản lý" });
         }
 
         /// <inheritdoc />

@@ -1,32 +1,36 @@
-﻿@model Account
+﻿@model Borrow
 
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-primary">Create Category</h2>
+            <h2 class="text-primary">Create Form Borrow</h2>
             <hr />
         </div>
         @* <div asp-validation-summary="All"></div> *@
+
+        <div class="mb-3 row p-1">
+            <label asp-for="NameBook" class="p-0"></label>
+            <input asp-for="NameBook" class="form-control" />
+            <span asp-validation-for="NameBook" class="text-danger"></span>
+        </div>
+
         <div class="mb-3 row p-1">
             <label asp-for="Email" class="p-0"></label>
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
+
         <div class="mb-3 row p-1">
-            <label asp-for="Password" class="p-0"></label>
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div class="mb-3 row p-1">
-            <label asp-for="Position" class="p-0"></label>
-            <select asp-for="Position" class="form-control">
-                <option value="">Chọn vị trí</option>
-                <option value="Quản lý">Quản lý</option>
-                <option value="Nhân viên">Nhân viên</option>
-            </select>
-            <span asp-validation-for="Position" class="text-danger"></span>
+            <label asp-for="NumerBorrow" class="p-0"></label>
+            <input asp-for="NumerBorrow" class="form-control" type="number" />
+            <span asp-validation-for="NumerBorrow" class="text-danger"></span>
         </div>
 
+        <div class="mb-3 row p-1">
+            <label asp-for="TimeBorrow" class="p-0"></label>
+            <input asp-for="TimeBorrow" class="form-control" />
+            <span asp-validation-for="TimeBorrow" class="text-danger"></span>
+        </div>
 
         <div class="row">
             <div class="col-6 col-md-3">
@@ -42,7 +46,6 @@
 
     </div>
 </form>
-
 
 @section Scripts {
     @{

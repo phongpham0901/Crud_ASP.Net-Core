@@ -1,15 +1,16 @@
-﻿@model List<Account>
+﻿@model List<Borrow>
+
 
 <div class="container">
     <div class="row pt-4 pb-3">
         <div class="col-6">
             <h2 class="text-primary">
-                Account List
+                Borrow List
             </h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Account" asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle-fill"></i> Create New Account
+            <a asp-controller="Borrow" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle-fill"></i> Create New Form Borrow
             </a>
         </div>
     </div>
@@ -19,13 +20,16 @@
     <thead>
         <tr>
             <th>
-                Account Email
+                Name Book
             </th>
             <th>
-                Account Password
+                Email
             </th>
             <th>
-                Account Position
+                NumerBorrow
+            </th>
+            <th>
+                TimeBorrow
             </th>
         </tr>
     </thead>
@@ -33,15 +37,16 @@
         @foreach (var obj in Model)
         {
             <tr>
+                <td>@obj.NameBook</td>
                 <td>@obj.Email</td>
-                <td>@obj.Password</td>
-                <td>@obj.Position</td>
+                <td>@obj.NumerBorrow</td>
+                <td>@obj.TimeBorrow</td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Account" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                        <a asp-controller="Borrow" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <a asp-controller="Account" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                        <a asp-controller="Borrow" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
                             <i class="bi bi-trash"></i> Delete
                         </a>
                     </div>

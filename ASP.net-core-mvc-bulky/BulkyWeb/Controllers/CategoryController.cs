@@ -11,10 +11,28 @@ namespace BulkyWeb.Controllers
         {
             _db = db;
         }
+
         public IActionResult Index()
         {
             
             List<Category> objCategoryList = _db.Categories.ToList();
+            List<Borrow> borrows = _db.Borrows.ToList();
+            foreach(Category category in objCategoryList)
+            {
+                foreach (Borrow borrow in borrows)
+                {
+                    if(category.Name == borrow.NameBook)
+                    {
+                        category.NumerOfBorrow = category.NumerOfBorrow - borrow.NumerBorrow;
+                        _db.Categories.Update(category);
+                        _db.SaveChanges();
+                    }
+                    else 
+                    {
+                        category.NumerOfBorrow = category.DisplayOrder;
+                    }
+                }
+            }
             objCategoryList = BubbleSort(objCategoryList, objCategoryList.Count);
          
             return View(objCategoryList);
