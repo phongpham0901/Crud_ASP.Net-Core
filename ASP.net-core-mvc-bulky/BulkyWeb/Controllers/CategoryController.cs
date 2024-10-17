@@ -1,5 +1,6 @@
 ﻿using BulkyWeb.Data;
 using BulkyWeb.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Controllers
@@ -47,6 +48,8 @@ namespace BulkyWeb.Controllers
         public IActionResult Create(Category obj)
         {
 
+            
+
             if (obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("Name", "The DisplayOrder cannot exactly match the Name.");
@@ -54,14 +57,53 @@ namespace BulkyWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
-                TempData["success"] = "Category created successfully";
-                return RedirectToAction("Index"); //return RedirectToAction("Index", "Category");
+                // Nếu không có giá trị trong ImageUrl, có thể xử lý nó ở đây
+                if (string.IsNullOrEmpty(obj.ImageUrl))
+                {
+                    ModelState.AddModelError("ImageUrl", "Image URL cannot be null.");
+                }
+                else
+                {
+                    _db.Categories.Add(obj);
+                    _db.SaveChanges();
+                    TempData["success"] = "Category created successfully";
+                    // Xóa giá trị trong Session sau khi đã sử dụng
+                    HttpContext.Session.Remove("UploadedFileName");
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            return View();
-            
+
+            // Trả về model để giữ lại dữ liệu đã nhập
+            return View(obj);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SingleFileUpload(IFormFile SingleFile)
+        {
+            if (SingleFile != null && SingleFile.Length > 0)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", SingleFile.FileName);
+
+                // Save file to the uploads directory
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await SingleFile.CopyToAsync(stream);
+                }
+                string img = $"\\uploads\\{SingleFile.FileName}";
+                // Store the file name in Session to access it later in the Create method
+                HttpContext.Session.SetString("UploadedFileName", img);
+
+                // Redirect back to the Create action
+                return RedirectToAction("Create", "Category");
+            }
+
+            HttpContext.Session.SetString("error", "File upload failed."); // Store error message in Session
+            return RedirectToAction("Index"); // Redirect if file upload fails
+        }
+
+
+
 
         public IActionResult Edit(int? id)
         {

@@ -18,5 +18,7 @@ namespace BulkyWeb.Models
 
         [Required]
         public int NumerOfBorrow { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace BulkyWeb.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Action", DisplayOrder = 1, NumerOfBorrow = 0 },
-                new Category { Id = 2, Name = "SciFi", DisplayOrder = 2, NumerOfBorrow = 0 },
-                new Category { Id = 3, Name = "History", DisplayOrder = 3, NumerOfBorrow = 2  }
+                new Category { Id = 1, Name = "Action", DisplayOrder = 1, NumerOfBorrow = 0, ImageUrl = "" },
+                new Category { Id = 2, Name = "SciFi", DisplayOrder = 2, NumerOfBorrow = 0, ImageUrl = "" },
+                new Category { Id = 3, Name = "History", DisplayOrder = 3, NumerOfBorrow = 2, ImageUrl = ""  }
                 );
 
             modelBuilder.Entity<Account>().HasData(
