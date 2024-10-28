@@ -20,5 +20,10 @@ namespace BulkyWeb.Models
 
         [Required]
         public DateTime TimeBorrow { get; set; }
+        [Required]
+        public DateTime TimeReturn { get; set; }
+
+        public bool IsReturned { get; set; }
+
     }
 }

@@ -129,5 +129,65 @@ namespace BulkyWeb.Controllers
             Console.WriteLine("Mật khẩu hợp lệ.");
             return true;
         }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Account FormDb = _db.Accounts.Find(id);
+            if (FormDb == null)
+            {
+                return NotFound();
+            }
+            return View(FormDb);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Account obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Accounts.Update(obj);
+                _db.SaveChanges();
+                TempData["success"] = "Updated successfully";
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Account? FormDb = _db.Accounts.Find(id);
+            if (FormDb == null)
+            {
+                return NotFound();
+            }
+            return View(FormDb);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePOST(int? id)
+        {
+            Account? obj = _db.Accounts.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _db.Accounts.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Category deleted successfully";
+            return RedirectToAction("Index");
+
+        }
+
     }
 }

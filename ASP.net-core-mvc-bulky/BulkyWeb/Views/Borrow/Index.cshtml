@@ -31,6 +31,12 @@
             <th>
                 TimeBorrow
             </th>
+            <th>
+                TimeReturn
+            </th>
+            <th>
+                Returned
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -41,6 +47,13 @@
                 <td>@obj.Email</td>
                 <td>@obj.NumerBorrow</td>
                 <td>@obj.TimeBorrow</td>
+                <td>@obj.TimeReturn</td>
+                <td>
+                    <label class="container">
+                        <input type="checkbox" @(obj.IsReturned ? "checked" : "") disabled>
+                        <span class="checkmark"></span>
+                    </label>
+                </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
                         <a asp-controller="Borrow" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">

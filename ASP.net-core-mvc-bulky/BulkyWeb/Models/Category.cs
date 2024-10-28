@@ -19,6 +19,8 @@ namespace BulkyWeb.Models
         [Required]
         public int NumerOfBorrow { get; set; }
 
+        public int RemainingOfBook { get; set; }
+
         public string ImageUrl { get; set; }
     }
 }

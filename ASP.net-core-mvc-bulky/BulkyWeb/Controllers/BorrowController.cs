@@ -1,6 +1,9 @@
 ﻿using BulkyWeb.Data;
 using BulkyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
+using System.Net;
+
 
 namespace BulkyWeb.Controllers
 {
@@ -11,12 +14,19 @@ namespace BulkyWeb.Controllers
 
         public BorrowController(ApplicationDbContext db)
         {
-            _db = db;
+            _db = db;         
         }
 
         public IActionResult Index()
         {
             List<Borrow> borrows = _db.Borrows.ToList();
+            foreach (Borrow borrow in borrows)
+            {
+                if (DateTime.Now.Date >= borrow.TimeReturn.Date)
+                {
+                    borrow.IsReturned = true;
+                }
+            }
             return View(borrows);
         }
 
@@ -31,7 +41,7 @@ namespace BulkyWeb.Controllers
             List<Category> categories = _db.Categories.ToList();
             foreach (Category category in categories)
             {
-                if (obj.NameBook == category.Name && obj.NumerBorrow <= category.NumerOfBorrow)
+                if (obj.NameBook == category.Name && obj.NumerBorrow <= category.RemainingOfBook)
                 {
                     _db.Borrows.Add(obj);
                     _db.SaveChanges();
@@ -44,5 +54,71 @@ namespace BulkyWeb.Controllers
             return View();
         }
 
+        public IActionResult Edit(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Borrow FormDb = _db.Borrows.Find(id);
+            if (FormDb == null)
+            {
+                return NotFound();
+            }
+            return View(FormDb);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Borrow obj)
+        {
+            List<Category> categories = _db.Categories.ToList();
+            if (ModelState.IsValid)
+            {
+                foreach (Category category in categories)
+                {
+                    if (obj.NumerBorrow <= category.RemainingOfBook)
+                    {
+                        _db.Borrows.Update(obj);
+                        _db.SaveChanges();
+                        TempData["success"] = "Updated successfully";
+                        return RedirectToAction("Index");
+                    }
+                    TempData["error"] = "Cannot Edit";
+                }
+            }
+            return View();
+
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Borrow? FormDb = _db.Borrows.Find(id);
+            if (FormDb == null)
+            {
+                return NotFound();
+            }
+            return View(FormDb);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePOST(int? id)
+        {
+            Borrow? obj = _db.Borrows.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _db.Borrows.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Deleted successfully";
+            return RedirectToAction("Index");
+
+        }
     }
 }

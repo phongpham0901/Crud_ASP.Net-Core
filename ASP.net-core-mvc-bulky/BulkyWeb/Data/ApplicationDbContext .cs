@@ -31,7 +31,7 @@ namespace BulkyWeb.Data
                 );
 
             modelBuilder.Entity<Borrow>().HasData(
-                new Borrow { Id = 1, Email = "phong@gmai.com", NameBook = "History", NumerBorrow = 1, TimeBorrow = new DateTime(2024, 12, 11) }
+                new Borrow { Id = 1, Email = "phong@gmai.com", NameBook = "History", NumerBorrow = 1, TimeBorrow = new DateTime(2024, 12, 11), TimeReturn = new DateTime(2024, 12, 28), IsReturned = false }
                 );
         }
     }

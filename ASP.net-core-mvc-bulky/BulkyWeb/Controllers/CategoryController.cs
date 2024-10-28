@@ -2,6 +2,7 @@
 using BulkyWeb.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace BulkyWeb.Controllers
 {
@@ -14,41 +15,79 @@ namespace BulkyWeb.Controllers
         }
 
         public IActionResult Index()
-        {
-            
+        {         
             List<Category> objCategoryList = _db.Categories.ToList();
             List<Borrow> borrows = _db.Borrows.ToList();
-            foreach(Category category in objCategoryList)
+            
+            foreach (Category category in objCategoryList)
             {
+                int totalNumerBorrow = 0;
+                
                 foreach (Borrow borrow in borrows)
                 {
-                    if(category.Name == borrow.NameBook)
+                    if (borrow.NameBook == category.Name)
                     {
-                        category.NumerOfBorrow = category.NumerOfBorrow - borrow.NumerBorrow;
-                        _db.Categories.Update(category);
-                        _db.SaveChanges();
-                    }
-                    else 
-                    {
-                        category.NumerOfBorrow = category.DisplayOrder;
+                        totalNumerBorrow += borrow.NumerBorrow;
                     }
                 }
+       
+                if (totalNumerBorrow > 0)
+                {
+                    category.NumerOfBorrow = totalNumerBorrow;
+                }
+                else
+                {
+                    category.NumerOfBorrow = category.DisplayOrder;
+                }
+                category.RemainingOfBook = category.DisplayOrder - category.NumerOfBorrow;
+                _db.Categories.Update(category);
             }
+
+            _db.SaveChanges();
+
             objCategoryList = BubbleSort(objCategoryList, objCategoryList.Count);
-         
+
             return View(objCategoryList);
+        }
+
+
+
+        public IActionResult Search(string search)
+        {
+            search = Request.Form["search"];
+            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> listSearch = new List<Category>();
+
+            foreach (Category category in objCategoryList)
+            {
+
+                if (category.Name == search)
+                {
+                    listSearch.Add(category);
+                }
+            }
+            return View("Index", listSearch);
+
+
         }
 
         public IActionResult Create()
         {
+            HttpContext.Session.SetString("Mode", "Create");
             return View();
         }
 
         [HttpPost]
         public IActionResult Create(Category obj)
         {
-
-            
+            List<Category> ctr = _db.Categories.ToList();
+            foreach(Category category in ctr)
+            {
+                if(obj.Name == category.Name)
+                {
+                    ModelState.AddModelError("Name", "The Name cannot exactly match the Name.");
+                }
+            }
 
             if (obj.Name == obj.DisplayOrder.ToString())
             {
@@ -95,14 +134,18 @@ namespace BulkyWeb.Controllers
                 HttpContext.Session.SetString("UploadedFileName", img);
 
                 // Redirect back to the Create action
-                return RedirectToAction("Create", "Category");
+                // kiểm tra xem đang ở edit hay create thì chuyển về view đấy
+                string mode = HttpContext.Session.GetString("Mode");
+
+                // Redirect to the appropriate view based on mode
+   
+                    return RedirectToAction("Create", "Category");
+             
             }
 
             HttpContext.Session.SetString("error", "File upload failed."); // Store error message in Session
             return RedirectToAction("Index"); // Redirect if file upload fails
         }
-
-
 
 
         public IActionResult Edit(int? id)
@@ -133,6 +176,29 @@ namespace BulkyWeb.Controllers
             return View();
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SingleFileUploadForEdit(IFormFile SingleFileEdit)
+        {
+            if (SingleFileEdit != null && SingleFileEdit.Length > 0)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", SingleFileEdit.FileName);
+
+                // Save file to the uploads directory
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await SingleFileEdit.CopyToAsync(stream);
+                }
+                string img = $"\\uploads\\{SingleFileEdit.FileName}";
+
+                // Return JSON with the file path
+                return Json($"File uploaded successfully: {img}");
+            }
+
+            return Json("File upload failed.");
+        }
+
+
 
         public IActionResult Delete(int? id)
         {

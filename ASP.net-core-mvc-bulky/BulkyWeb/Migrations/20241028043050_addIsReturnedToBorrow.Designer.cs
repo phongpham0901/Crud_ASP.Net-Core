@@ -4,6 +4,7 @@ using BulkyWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BulkyWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241028043050_addIsReturnedToBorrow")]
+    partial class addIsReturnedToBorrow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,9 +135,6 @@ namespace BulkyWeb.Migrations
                     b.Property<int>("NumerOfBorrow")
                         .HasColumnType("int");
 
-                    b.Property<int>("RemainingOfBook")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -146,8 +146,7 @@ namespace BulkyWeb.Migrations
                             DisplayOrder = 1,
                             ImageUrl = "",
                             Name = "Action",
-                            NumerOfBorrow = 0,
-                            RemainingOfBook = 0
+                            NumerOfBorrow = 0
                         },
                         new
                         {
@@ -155,8 +154,7 @@ namespace BulkyWeb.Migrations
                             DisplayOrder = 2,
                             ImageUrl = "",
                             Name = "SciFi",
-                            NumerOfBorrow = 0,
-                            RemainingOfBook = 0
+                            NumerOfBorrow = 0
                         },
                         new
                         {
@@ -164,8 +162,7 @@ namespace BulkyWeb.Migrations
                             DisplayOrder = 3,
                             ImageUrl = "",
                             Name = "History",
-                            NumerOfBorrow = 2,
-                            RemainingOfBook = 0
+                            NumerOfBorrow = 2
                         });
                 });
 #pragma warning restore 612, 618

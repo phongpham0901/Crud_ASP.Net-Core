@@ -1,7 +1,7 @@
 ﻿@model Category
 
 <form method="post">
-    <input asp-for="Id" hidden/>
+    <input asp-for="Id" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Edit Category</h2>
@@ -17,6 +17,11 @@
             <label asp-for="DisplayOrder" class="p-0"></label>
             <input asp-for="DisplayOrder" class="form-control" />
             <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+        </div>
+        <div class="mb-3 row p-1">
+            <label asp-for="ImageUrl" class="p-0"></label>
+            <input asp-for="ImageUrl" id="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
         </div>
 
         <div class="row">
@@ -34,8 +39,50 @@
     </div>
 </form>
 
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-controller="Category" asp-action="SingleFileUploadForEdit"
+              enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="file" id="fileInput" name="SingleFileEdit" class="form-control" />
+            <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>
+
+
 @section Scripts {
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
+    @* Đảm bảo rằng các thư viện cần thiết như jQuery đã được thêm *@
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#uploadButton').click(function (event) {
+                event.preventDefault();
+
+                var formData = new FormData();
+                var fileInput = $('#fileInput')[0].files[0];
+                formData.append('SingleFileEdit', fileInput);
+
+                $.ajax({
+                    url: '@Url.Action("SingleFileUploadForEdit", "Category")',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.startsWith("File uploaded successfully")) {
+                            var filePath = response.split(": ")[1].trim();
+                            $('#ImageUrl').val(filePath);  // Cập nhật giá trị của input ImageUrl
+                            //alert(response);
+                        } else {
+                            alert("Upload failed: " + response);
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while uploading the file.");
+                    }
+                });
+            });
+        });
+    </script>
 }
